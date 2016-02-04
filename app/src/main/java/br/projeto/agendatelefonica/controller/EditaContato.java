@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.firebase.client.Firebase;
-import com.parse.*;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
