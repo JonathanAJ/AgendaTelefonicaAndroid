@@ -9,16 +9,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.Firebase;
 import com.parse.*;
 
 import br.projeto.agendatelefonica.R;
+import br.projeto.agendatelefonica.model.Contato;
 
 public class EditaContato extends AppCompatActivity {
+
+    private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
+
+    private String id;
+    private String nome;
+    private String telefone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edita_contato);
+
+        Bundle extra = getIntent().getExtras();
+        id = extra.getString("Id");
+        nome = extra.getString("Nome");
+        telefone = extra.getString("Telefone");
 
         Toolbar barraMain = (Toolbar) findViewById(R.id.barraMain);
         barraMain.setTitle("Agenda Telefônica");
@@ -27,57 +40,47 @@ public class EditaContato extends AppCompatActivity {
         barraMain.setSubtitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setLogo(R.mipmap.ic_launcher);
         barraMain.setContentInsetsAbsolute(5, 5);
-        setSupportActionBar(barraMain);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Bundle extra = getIntent().getExtras();
-
-        final String id = extra.getString("Id");
-        String nome = extra.getString("Nome");
-        String telefone = extra.getString("Telefone");
-
-        final EditText nomeEdit = (EditText) findViewById(R.id.nom);
-        final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
-
-        nomeEdit.setText(nome);
-        telefoneEdit.setText(telefone);
-
-        Button btSalva = (Button) findViewById(R.id.btSalva);
-
-        btSalva.setOnClickListener(new View.OnClickListener() {
+        barraMain.inflateMenu(R.menu.menu_delete);
+        barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("Lista_Telefonica");
-                query.getInBackground(id, new GetCallback<ParseObject>() {
-                    public void done(ParseObject listaTelefonica, ParseException e) {
-                        if (e == null) {
-                            String nome = nomeEdit.getText().toString();
-                            String telefone = telefoneEdit.getText().toString();
-                            /*
-                             * Edita o objeto que foi retomado
-                             */
-                            listaTelefonica.put("Nome", nome);
-                            listaTelefonica.put("Telefone", telefone);
-                            /*
-                             * Salva as modificações
-                             */
-                            listaTelefonica.saveInBackground();
-                            startActivity(new Intent(EditaContato.this, MainActivity.class));
-                        } else {
-                            System.out.println("Erro :" + e);
-                        }
-                    }
-                });
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.item_delete) {
+                    editaContato(null, null);
+                    Intent activityMain = new Intent(EditaContato.this, MainActivity.class);
+                    startActivity(activityMain);
+                }
+                return true;
             }
         });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem){
-        int id = menuItem.getItemId();
-        if(id==android.R.id.home){
-            finish();
-        }
-        return true;
+    protected void onStart(){
+        super.onStart();
+
+        final EditText nomeEdit = (EditText) findViewById(R.id.nom);
+        final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
+        nomeEdit.setText(nome);
+        telefoneEdit.setText(telefone);
+
+        Button btSalva = (Button) findViewById(R.id.btSalva);
+        btSalva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nome = nomeEdit.getText().toString();
+                String telefone = telefoneEdit.getText().toString();
+                editaContato(nome, telefone);
+                startActivity(new Intent(EditaContato.this, MainActivity.class));
+            }
+        });
+    }
+
+    public void editaContato(String nome, String telefone){
+        Contato novoContato = new Contato();
+        novoContato.setNome(nome);
+        novoContato.setTelefone(telefone);
+        url.child("Contatos").child(id).setValue(novoContato);
     }
 }

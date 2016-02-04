@@ -14,20 +14,28 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="15dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/imgFoto"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/btFoto"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Contato"
-            android:textSize="36sp"/>
+            android:src="@drawable/ic_action_photo"
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome:"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"/>
 
         <EditText
@@ -35,14 +43,14 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:layout_marginTop="10dp"
-            android:ems="10"
+            android:hint="Insira um nome"
             android:id="@+id/nom" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Telefone:"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:id="@+id/textView" />
 
@@ -51,13 +59,13 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:layout_marginTop="10dp"
-            android:ems="10"
+            android:hint="Insira um telefone"
             android:id="@+id/tel" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:text="Salvar contato"
             android:id="@+id/btSalva" />
 

@@ -1,18 +1,27 @@
 package br.projeto.agendatelefonica.controller;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import android.support.v7.widget.Toolbar;
 
-import com.parse.*;
+import com.firebase.client.Firebase;
+
+import java.io.ByteArrayOutputStream;
 
 import br.projeto.agendatelefonica.R;
+import br.projeto.agendatelefonica.model.Contato;
 
 public class CriaContato extends AppCompatActivity {
+
+    private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,43 +37,66 @@ public class CriaContato extends AppCompatActivity {
         barraMain.setContentInsetsAbsolute(5, 5);
         setSupportActionBar(barraMain);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-        /*
-         * Inicializando base do parse com as keys geradas
-         */
-        //  Parse.initialize(this, "RNihJPcSLheuubmCXlptrimTCStC5T4j3d0nzDYu", "H9MMOZZ6IPTuRpwdAHwhD0VrakQkc2Tr5g7wmwIs");
-        /*
-         * Linha opcional para analisar o tráfego
-         */
-        ParseAnalytics.trackAppOpenedInBackground(getIntent());
-        /*
-         * Cria um objeto parse que cria uma classe chamada Lista_Telefonica
-         */
-        final ParseObject listaTelefonica = new ParseObject("Lista_Telefonica");
+    @Override
+    protected void onStart(){
+        super.onStart();
 
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
         final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
+        final ImageView imageView = (ImageView) findViewById(R.id.imgFoto);
 
         Button btSalva = (Button) findViewById(R.id.btSalva);
-
         btSalva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Contato contato = new Contato();
                 String nome = nomeEdit.getText().toString();
                 String telefone = telefoneEdit.getText().toString();
-                /*
-                 * Adiciona a coluna Nome o valor nome e o
-                 * valor telefone a coluna Telefone
-                 */
-                listaTelefonica.put("Nome", nome);
-                listaTelefonica.put("Telefone", telefone);
-                /*
-                 * Salva as modificações
-                 */
-                listaTelefonica.saveInBackground();
+
+                Bitmap imagemBit = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                byte[] imgByte = converteBitmapParaByte(imagemBit);
+                String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
+
+                contato.setNome(nome);
+                contato.setTelefone(telefone);
+                contato.setImagem(imgBase64);
+
+                url.child("Contatos").push().setValue(contato);
                 startActivity(new Intent(CriaContato.this, MainActivity.class));
             }
         });
+
+        ImageButton btFoto = (ImageButton) findViewById(R.id.btFoto);
+        btFoto.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // criando a intent
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // inicia atividade com resposta
+                startActivityForResult(intent, 0);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(data != null){
+            Bundle bundle = data.getExtras();
+            if(bundle != null){
+                Bitmap img = (Bitmap) bundle.get("data");
+                ImageView imageView = (ImageView) findViewById(R.id.imgFoto);
+                imageView.setImageBitmap(img);
+                imageView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public byte[] converteBitmapParaByte(Bitmap img){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override
