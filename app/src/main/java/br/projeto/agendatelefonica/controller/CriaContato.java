@@ -68,16 +68,17 @@ public class CriaContato extends AppCompatActivity {
             }
         });
 
-        ImageButton btFoto = (ImageButton) findViewById(R.id.btFoto);
-        btFoto.setOnClickListener(new View.OnClickListener(){
+        ImageView imgView = (ImageView) findViewById(R.id.imgFoto);
+        imgView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 // criando a intent
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // inicia atividade com resposta
                 startActivityForResult(intent, 0);
             }
         });
+
     }
 
     @Override

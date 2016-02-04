@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 activityEdita.putExtra("Id", contatoSelecionado.getId());
                 activityEdita.putExtra("Nome", contatoSelecionado.getNome());
                 activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());
+                activityEdita.putExtra("Imagem", contatoSelecionado.getImagem());
                 startActivity(activityEdita);
             }
         });
