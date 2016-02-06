@@ -1,16 +1,22 @@
 package br.projeto.agendatelefonica.controller;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.firebase.client.Firebase;
-import com.parse.*;
+
+import java.io.ByteArrayOutputStream;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
@@ -22,6 +28,7 @@ public class EditaContato extends AppCompatActivity {
     private String id;
     private String nome;
     private String telefone;
+    private String imagem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class EditaContato extends AppCompatActivity {
         id = extra.getString("Id");
         nome = extra.getString("Nome");
         telefone = extra.getString("Telefone");
+        imagem = extra.getString("Imagem");
 
         Toolbar barraMain = (Toolbar) findViewById(R.id.barraMain);
         barraMain.setTitle("Agenda Telefônica");
@@ -61,9 +69,15 @@ public class EditaContato extends AppCompatActivity {
         super.onStart();
 
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
-        final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
         nomeEdit.setText(nome);
+        final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
         telefoneEdit.setText(telefone);
+        final ImageView imgEdit = (ImageView) findViewById(R.id.imgFoto);
+
+        byte[] imgByte = Base64.decode(imagem, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+
+        imgEdit.setImageBitmap(bitmap);
 
         Button btSalva = (Button) findViewById(R.id.btSalva);
         btSalva.setOnClickListener(new View.OnClickListener() {
