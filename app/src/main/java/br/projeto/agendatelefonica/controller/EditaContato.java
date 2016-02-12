@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditaContato extends AppCompatActivity {
 
@@ -70,10 +71,11 @@ public class EditaContato extends AppCompatActivity {
 
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
         nomeEdit.setText(nome);
+
         final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
         telefoneEdit.setText(telefone);
-        final ImageView imgEdit = (ImageView) findViewById(R.id.imgFoto);
 
+        final CircleImageView imgEdit = (CircleImageView) findViewById(R.id.imgFoto);
         byte[] imgByte = Base64.decode(imagem, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
 
