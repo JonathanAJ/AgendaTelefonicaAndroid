@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CriaContato extends AppCompatActivity {
 
@@ -43,9 +44,10 @@ public class CriaContato extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
 
+        // Views
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
         final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
-        final ImageView imageView = (ImageView) findViewById(R.id.imgFoto);
+        final CircleImageView imageView = (CircleImageView) findViewById(R.id.imgFoto);
 
         Button btSalva = (Button) findViewById(R.id.btSalva);
         btSalva.setOnClickListener(new View.OnClickListener() {
@@ -59,17 +61,12 @@ public class CriaContato extends AppCompatActivity {
                 byte[] imgByte = converteBitmapParaByte(imagemBit);
                 String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
 
-                contato.setNome(nome);
-                contato.setTelefone(telefone);
-                contato.setImagem(imgBase64);
-
-                url.child("Contatos").push().setValue(contato);
-                startActivity(new Intent(CriaContato.this, MainActivity.class));
+                salvaContato(nome, telefone, imgBase64);
+                finish();
             }
         });
 
-        ImageView imgView = (ImageView) findViewById(R.id.imgFoto);
-        imgView.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // criando a intent
@@ -78,7 +75,6 @@ public class CriaContato extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
-
     }
 
     @Override
@@ -87,9 +83,8 @@ public class CriaContato extends AppCompatActivity {
             Bundle bundle = data.getExtras();
             if(bundle != null){
                 Bitmap img = (Bitmap) bundle.get("data");
-                ImageView imageView = (ImageView) findViewById(R.id.imgFoto);
+                CircleImageView imageView = (CircleImageView) findViewById(R.id.imgFoto);
                 imageView.setImageBitmap(img);
-                imageView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -98,6 +93,14 @@ public class CriaContato extends AppCompatActivity {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    public void salvaContato(String nome, String telefone, String imagem){
+        Contato novoContato = new Contato();
+        novoContato.setNome(nome);
+        novoContato.setTelefone(telefone);
+        novoContato.setImagem(imagem);
+        url.child("Contatos").push().setValue(novoContato);
     }
 
     @Override
