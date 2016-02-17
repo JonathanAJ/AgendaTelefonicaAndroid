@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(MainActivity.this, R.layout.item_lista_contatos, listaDeContatos);
 
         listaView.setAdapter(contatosAdapter);
-        atualizaListaContatos(listaDeContatos);
+        atualizaListaContatos(listaDeContatos, "");
 
         listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,71 +81,41 @@ public class MainActivity extends AppCompatActivity {
         buscaContato.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String contatoNome) {
-                if(contatoNome.isEmpty()){
-                    atualizaListaContatos(listaDeContatos);
+                if (contatoNome.isEmpty()) {
+                    atualizaListaContatos(listaDeContatos, "");
+                } else {
+                    atualizaListaContatos(listaDeContatos, contatoNome);
                 }
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String contatoNome) {
-                procuraContato(listaDeContatos, contatoNome);
+                atualizaListaContatos(listaDeContatos, contatoNome);
                 return true;
             }
         });
     }
 
-    public void atualizaListaContatos(final ArrayList<Contato> listaDeContatos){
-        listaDeContatos.clear();
-
-        url.child("Contatos").addValueEventListener(new ValueEventListener() {
+    public void atualizaListaContatos(final ArrayList<Contato> listaDeContatos, String contatoNome) {
+        url.child("Contatos").orderByChild("nome").startAt(contatoNome).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                listaDeContatos.clear();
                 System.out.println("Existem " + dataSnapshot.getChildrenCount() + " contatos");
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Contato contato = postSnapshot.getValue(Contato.class);
                     contato.setId(postSnapshot.getKey());
                     listaDeContatos.add(contato);
                 }
+                // Atualiza a lista
+                ListView listaView = (ListView) findViewById(R.id.listView);
+                ((BaseAdapter) listaView.getAdapter()).notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("Erro de leitura do baco: " + firebaseError.getMessage());
-            }
-        });
-    }
-
-    public void procuraContato(final ArrayList<Contato> listaDeContatos, String contatoNome){
-        listaDeContatos.clear();
-
-        Query urlQuery = url.child("Contatos").orderByChild("nome").startAt(contatoNome);
-        urlQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Contato contato = dataSnapshot.getValue(Contato.class);
-                contato.setId(dataSnapshot.getKey());
-                listaDeContatos.add(contato);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
     }
