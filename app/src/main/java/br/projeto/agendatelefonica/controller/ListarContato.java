@@ -7,11 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.*;
@@ -19,14 +17,14 @@ import java.util.*;
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
 
-public class MainActivity extends AppCompatActivity {
+public class ListarContato extends AppCompatActivity {
 
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.lista_contato);
 
         Toolbar barraMain = (Toolbar) findViewById(R.id.barraMain);
         barraMain.setTitle("Agenda Telefônica");
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.item_add) {
-                    Intent activityCria = new Intent(MainActivity.this, CriaContato.class);
+                    Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
                     startActivity(activityCria);
                 }
                 return true;
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         final ArrayList<Contato> listaDeContatos = new ArrayList<Contato>();
         final ListView listaView = (ListView) findViewById(R.id.listView);
-        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(MainActivity.this, R.layout.item_lista_contatos, listaDeContatos);
+        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(ListarContato.this, R.layout.item_lista_contatos, listaDeContatos);
 
         listaView.setAdapter(contatosAdapter);
         atualizaListaContatos(listaDeContatos, "");
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Contato contatoSelecionado = listaDeContatos.get(position);
 
-                Intent activityEdita = new Intent(MainActivity.this, EditaContato.class);
+                Intent activityEdita = new Intent(ListarContato.this, EditaContato.class);
                 activityEdita.putExtra("Id", contatoSelecionado.getId());
                 activityEdita.putExtra("Nome", contatoSelecionado.getNome());
                 activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());

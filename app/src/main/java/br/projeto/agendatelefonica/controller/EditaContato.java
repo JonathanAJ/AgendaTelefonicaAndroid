@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.firebase.client.Firebase;
 
@@ -52,7 +51,7 @@ public class EditaContato extends AppCompatActivity {
 
                 if (id == R.id.item_delete) {
                     editaContato(null, null, null);
-                    Intent activityMain = new Intent(EditaContato.this, MainActivity.class);
+                    Intent activityMain = new Intent(EditaContato.this, ListarContato.class);
                     startActivity(activityMain);
                 }
                 return true;
