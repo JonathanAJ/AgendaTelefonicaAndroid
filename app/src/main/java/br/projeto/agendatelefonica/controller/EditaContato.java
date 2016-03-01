@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
 import java.io.ByteArrayOutputStream;
@@ -25,6 +26,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditaContato extends AppCompatActivity {
     // URL firebase
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
+    private AuthData authData = url.getAuth();
+
     // Variaveis que recebem os extras
     private String id;
     private String nome;
@@ -50,7 +53,7 @@ public class EditaContato extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.item_delete) {
-                    editaContato(null, null, null);
+                    editaContato(null, null, null, null);
                     Intent activityMain = new Intent(EditaContato.this, ListarContato.class);
                     startActivity(activityMain);
                 }
@@ -101,7 +104,7 @@ public class EditaContato extends AppCompatActivity {
                 byte[] imgByte = converteBitmapParaByte(imagemBit);
                 String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
 
-                editaContato(nome, telefone, imgBase64);
+                editaContato(nome, telefone, imgBase64, authData.getUid());
                 finish();
             }
         });
@@ -135,11 +138,12 @@ public class EditaContato extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public void editaContato(String nome, String telefone, String imagem){
+    public void editaContato(String nome, String telefone, String imagem, String pertence){
         Contato novoContato = new Contato();
         novoContato.setNome(nome);
         novoContato.setTelefone(telefone);
         novoContato.setImagem(imagem);
+        novoContato.setIdPertence(pertence);
         url.child("Contatos").child(this.id).setValue(novoContato);
     }
 }

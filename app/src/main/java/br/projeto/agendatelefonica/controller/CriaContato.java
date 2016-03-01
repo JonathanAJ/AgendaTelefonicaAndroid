@@ -13,6 +13,7 @@ import android.widget.*;
 import android.support.v7.widget.Toolbar;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.AuthData;
 
 import java.io.ByteArrayOutputStream;
 
@@ -21,8 +22,9 @@ import br.projeto.agendatelefonica.model.Contato;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CriaContato extends AppCompatActivity {
-
+    // URL firebase
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
+    private AuthData authData = url.getAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class CriaContato extends AppCompatActivity {
                 byte[] imgByte = converteBitmapParaByte(imagemBit);
                 String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
 
-                salvaContato(nome, telefone, imgBase64);
+                salvaContato(nome, telefone, imgBase64, authData.getUid());
                 finish();
             }
         });
@@ -95,11 +97,12 @@ public class CriaContato extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public void salvaContato(String nome, String telefone, String imagem){
+    public void salvaContato(String nome, String telefone, String imagem, String pertence){
         Contato novoContato = new Contato();
         novoContato.setNome(nome);
         novoContato.setTelefone(telefone);
         novoContato.setImagem(imagem);
+        novoContato.setIdPertence(pertence);
         url.child("Contatos").push().setValue(novoContato);
     }
 

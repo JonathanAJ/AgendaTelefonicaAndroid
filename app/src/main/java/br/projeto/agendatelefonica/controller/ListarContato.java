@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -18,8 +19,9 @@ import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
 
 public class ListarContato extends AppCompatActivity {
-
+    // URL firebase
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
+    private AuthData authData = url.getAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class ListarContato extends AppCompatActivity {
     }
 
     public void atualizaListaContatos(final ArrayList<Contato> listaDeContatos, String contatoNome) {
-        url.child("Contatos").orderByChild("nome").startAt(contatoNome).addValueEventListener(new ValueEventListener() {
+        url.child("Contatos").orderByChild("idPertence").equalTo(authData.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listaDeContatos.clear();

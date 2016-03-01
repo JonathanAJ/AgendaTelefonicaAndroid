@@ -5,15 +5,17 @@ public class Contato {
     private String nome;
     private String telefone;
     private String imagem;
+    private String idPertence;
 
     public Contato(){
     }
 
-    public Contato(String id, String nome, String telefone, String imagem) {
+    public Contato(String id, String nome, String telefone, String imagem, String idPertence) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.imagem = imagem;
+        this.idPertence = idPertence;
     }
 
     public String getId() {
@@ -46,6 +48,14 @@ public class Contato {
 
     public void setImagem(String imagem) {
         this.imagem = imagem;
+    }
+
+    public String getIdPertence() {
+        return idPertence;
+    }
+
+    public void setIdPertence(String idPertence) {
+        this.idPertence = idPertence;
     }
 
     @Override

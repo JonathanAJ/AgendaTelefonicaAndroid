@@ -1,5 +1,6 @@
 package br.projeto.agendatelefonica.controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,22 +10,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Usuario;
+import static br.projeto.agendatelefonica.controller.Util.*;
 
 public class LoginContato extends AppCompatActivity {
     // URL firebase
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
 
+    // URL firebase de conexao
+    private Firebase conexao = new Firebase("https://minhagendatelefonica.firebaseio.com/.info/connected");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_contato);
+        usuarioAutenticado();
     }
 
     @Override
@@ -89,42 +97,53 @@ public class LoginContato extends AppCompatActivity {
                 logarUsuario(email, senha);
             }
         });
+
+        listenerConnection(getApplicationContext());
     }
 
     public void cadastrarUsuario(final String nome, final String email, final String senha) {
         url.createUser(email, senha, new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
-                mensagem("Conta criada com sucesso! Seu UID é: " + result.get("uid").toString());
+                mensagem(getApplicationContext(), "Conta criada com sucesso! Seu UID é: " + result.get("uid").toString());
             }
+
             @Override
             public void onError(FirebaseError firebaseError) {
-                mensagem("ERRO: " + firebaseError);
+                mensagem(getApplicationContext(), "ERRO: " + firebaseError);
             }
         });
     }
 
-    public void logarUsuario(String email, String senha){
+    public void logarUsuario(String email, String senha) {
         url.authWithPassword(email, senha, new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                mensagem("Logado! UID: " + authData.getUid() + ", Provider: " + authData.getProvider() + ", Token: " + authData.getToken());
+                mensagem(getApplicationContext(), "Logado! UID: " + authData.getUid() + ", Provider: " + authData.getProvider() + ", Token: " + authData.getToken());
 
                 Usuario user = new Usuario("Mude seu nome", authData.getProviderData().get("email").toString());
                 url.child("Usuarios").child(authData.getUid()).setValue(user);
-                
+
                 Intent intentMain = new Intent(LoginContato.this, ListarContato.class);
                 startActivity(intentMain);
             }
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
-                mensagem("ERRO: " + firebaseError);
+                mensagem(getApplicationContext(), "ERRO: " + firebaseError);
             }
         });
     }
 
-    public void mensagem(String msg){
-        Toast.makeText(LoginContato.this, msg, Toast.LENGTH_SHORT).show();
+    public void usuarioAutenticado(){
+        url.addAuthStateListener(new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (authData != null) {
+                    Intent intentMain = new Intent(LoginContato.this, ListarContato.class);
+                    startActivity(intentMain);
+                }
+            }
+        });
     }
 }
