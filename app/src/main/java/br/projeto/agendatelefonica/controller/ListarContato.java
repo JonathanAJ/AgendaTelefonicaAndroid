@@ -35,6 +35,7 @@ public class ListarContato extends AppCompatActivity {
         barraMain.setSubtitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setLogo(R.mipmap.ic_launcher);
         barraMain.inflateMenu(R.menu.menu_add);
+        barraMain.inflateMenu(R.menu.menu_exit);
         barraMain.setContentInsetsAbsolute(5, 5);
         barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -44,6 +45,10 @@ public class ListarContato extends AppCompatActivity {
                 if (id == R.id.item_add) {
                     Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
                     startActivity(activityCria);
+                }else if (id == R.id.item_exit) {
+                    url.unauth();
+                    Intent activityLogin = new Intent(ListarContato.this, LoginContato.class);
+                    startActivity(activityLogin);
                 }
                 return true;
             }

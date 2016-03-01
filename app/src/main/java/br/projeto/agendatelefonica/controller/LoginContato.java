@@ -121,8 +121,7 @@ public class LoginContato extends AppCompatActivity {
             public void onAuthenticated(AuthData authData) {
                 mensagem(getApplicationContext(), "Logado! UID: " + authData.getUid() + ", Provider: " + authData.getProvider() + ", Token: " + authData.getToken());
 
-                Usuario user = new Usuario("Mude seu nome", authData.getProviderData().get("email").toString());
-                url.child("Usuarios").child(authData.getUid()).setValue(user);
+                url.child("Usuarios").child(authData.getUid()).setValue(authData.getProviderData().get("email").toString());
 
                 Intent intentMain = new Intent(LoginContato.this, ListarContato.class);
                 startActivity(intentMain);

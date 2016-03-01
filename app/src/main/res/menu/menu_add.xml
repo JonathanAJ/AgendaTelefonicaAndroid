@@ -4,6 +4,5 @@
     <item
         android:id="@+id/item_add"
         android:icon="@drawable/ic_action_add"
-        android:title="Adicionar Contato"
-        app:showAsAction="always" />
+        android:title="Adicionar Contato" />
 </menu>
