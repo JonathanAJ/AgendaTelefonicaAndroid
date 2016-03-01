@@ -1,11 +1,13 @@
 package br.projeto.agendatelefonica.controller;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
+import android.widget.TabHost.TabSpec;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -30,7 +32,6 @@ public class ListarContato extends AppCompatActivity {
 
         Toolbar barraMain = (Toolbar) findViewById(R.id.barraMain);
         barraMain.setTitle("Agenda Telefônica");
-        barraMain.setSubtitle("Meus Contatos");
         barraMain.setTitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setSubtitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setLogo(R.mipmap.ic_launcher);
@@ -45,7 +46,7 @@ public class ListarContato extends AppCompatActivity {
                 if (id == R.id.item_add) {
                     Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
                     startActivity(activityCria);
-                }else if (id == R.id.item_exit) {
+                } else if (id == R.id.item_exit) {
                     url.unauth();
                     Intent activityLogin = new Intent(ListarContato.this, LoginContato.class);
                     startActivity(activityLogin);
@@ -53,6 +54,21 @@ public class ListarContato extends AppCompatActivity {
                 return true;
             }
         });
+
+
+        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup();
+
+        TabSpec spec1 = tabHost.newTabSpec("TAB 1");
+        spec1.setContent(R.id.tab1);
+        spec1.setIndicator("Meus Contatos");
+
+        TabSpec spec2=tabHost.newTabSpec("TAB 2");
+        spec2.setContent(R.id.tab2);
+        spec2.setIndicator("Meus Grupos");
+
+        tabHost.addTab(spec1);
+        tabHost.addTab(spec2);
     }
 
     @Override
