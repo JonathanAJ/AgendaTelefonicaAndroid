@@ -141,6 +141,7 @@ public class LoginContato extends AppCompatActivity {
                 if (authData != null) {
                     Intent intentMain = new Intent(LoginContato.this, ListarContato.class);
                     startActivity(intentMain);
+                    finish();
                 }
             }
         });
