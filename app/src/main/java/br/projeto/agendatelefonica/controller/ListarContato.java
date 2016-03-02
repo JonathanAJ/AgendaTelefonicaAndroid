@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.*;
 import android.view.*;
 import android.widget.*;
 import android.widget.TabHost.TabSpec;
@@ -14,16 +15,23 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.*;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
 
+import static br.projeto.agendatelefonica.controller.Util.mensagem;
+
 public class ListarContato extends AppCompatActivity {
     // URL firebase
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
     private AuthData authData = url.getAuth();
+
+    // Variáveis
+    private FloatingActionButton btFloat;
+    private TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,6 @@ public class ListarContato extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-
                 if (id == R.id.item_add) {
                     Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
                     startActivity(activityCria);
@@ -56,7 +63,7 @@ public class ListarContato extends AppCompatActivity {
         });
 
 
-        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
         TabSpec spec1 = tabHost.newTabSpec("TAB 1");
@@ -69,6 +76,20 @@ public class ListarContato extends AppCompatActivity {
 
         tabHost.addTab(spec1);
         tabHost.addTab(spec2);
+
+        btFloat = (FloatingActionButton) findViewById(R.id.btFloat);
+        btFloat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = tabHost.getCurrentTab();
+                if(i == 0){
+                    Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
+                    startActivity(activityCria);
+                }else if(i == 1){
+                    mensagem(getApplicationContext(), "Criar o grupo");
+                }
+            }
+        });
     }
 
     @Override
@@ -136,7 +157,7 @@ public class ListarContato extends AppCompatActivity {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("Erro de leitura do baco: " + firebaseError.getMessage());
+                Log.e("Erro no banco", firebaseError.getMessage());
             }
         });
     }
