@@ -122,7 +122,7 @@ public class LoginContato extends AppCompatActivity {
             @Override
             public void onAuthenticated(final AuthData authData) {
                 mensagem(getApplicationContext(), "Bem vindo(a) a sua agenda!");
-                url.child("Usuarios").child(authData.getUid()).setValue(authData.getProviderData().get("email").toString());
+                url.child("Usuarios").child(authData.getUid()).child("email").setValue(authData.getProviderData().get("email").toString());
                 Intent intentMain = new Intent(LoginContato.this, ListarContato.class);
                 startActivity(intentMain);
                 finish();
