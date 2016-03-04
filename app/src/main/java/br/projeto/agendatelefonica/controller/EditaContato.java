@@ -46,6 +46,9 @@ public class EditaContato extends AppCompatActivity {
         barraMain.setSubtitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setLogo(R.mipmap.ic_launcher);
         barraMain.setContentInsetsAbsolute(5, 5);
+        setSupportActionBar(barraMain);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         barraMain.inflateMenu(R.menu.menu_delete);
         barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -145,5 +148,14 @@ public class EditaContato extends AppCompatActivity {
         novoContato.setImagem(imagem);
         novoContato.setIdPertence(pertence);
         url.child("Contatos").child(this.id).setValue(novoContato);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        int id = menuItem.getItemId();
+        if(id==android.R.id.home){
+            finish();
+        }
+        return true;
     }
 }
