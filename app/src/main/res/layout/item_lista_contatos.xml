@@ -4,9 +4,14 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="5dp"
+    android:paddingLeft="20dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginStart="20dp"
     android:singleLine="true"
     android:textSize="20sp"
     android:ellipsize="end"
-    android:drawableLeft="@drawable/ic_profile"
-    android:drawableRight="@drawable/ic_action_edit">
+    android:drawableRight="@drawable/ic_action_edit"
+    android:drawableEnd="@drawable/ic_action_edit">
 </TextView>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".controller.CriaContato">
+    tools:context="br.projeto.agendatelefonica.controller.CriarGrupo">
 
     <include
         android:layout_width="match_parent"
@@ -14,55 +14,38 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="15dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/imgFoto"
+            android:id="@+id/imgFotoGrupo"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_gravity="center"
-            android:src="@drawable/profile"/>
+            android:src="@drawable/group"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome:"
+            android:text="Nome do Grupo:"
             android:layout_marginTop="10dp"
             android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/nomeGrupo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:layout_marginTop="10dp"
-            android:hint="Insira um nome"
-            android:id="@+id/nom" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Telefone:"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:id="@+id/textView" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:layout_marginTop="10dp"
-            android:hint="Insira um telefone"
-            android:id="@+id/tel" />
+            android:hint="Insira um nome"/>
 
         <Button
+            android:id="@+id/btSalvaGrupo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Salvar contato"
-            android:id="@+id/btSalva" />
+            android:text="Criar Grupo"/>
 
     </LinearLayout>
-
 </LinearLayout>

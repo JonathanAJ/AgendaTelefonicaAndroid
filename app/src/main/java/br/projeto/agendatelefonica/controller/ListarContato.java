@@ -86,7 +86,8 @@ public class ListarContato extends AppCompatActivity {
                     Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
                     startActivity(activityCria);
                 }else if(i == 1){
-                    mensagem(getApplicationContext(), "Criar o grupo");
+                    Intent activityCria = new Intent(ListarContato.this, CriarGrupo.class);
+                    startActivity(activityCria);
                 }
             }
         });
