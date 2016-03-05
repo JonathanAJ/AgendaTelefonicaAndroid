@@ -21,6 +21,7 @@ import java.util.*;
 
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
+import br.projeto.agendatelefonica.model.Grupo;
 
 import static br.projeto.agendatelefonica.controller.Util.mensagem;
 
@@ -45,6 +46,7 @@ public class ListarContato extends AppCompatActivity {
         barraMain.setLogo(R.mipmap.ic_launcher);
         barraMain.inflateMenu(R.menu.menu_add);
         barraMain.inflateMenu(R.menu.menu_exit);
+        barraMain.inflateMenu(R.menu.menu_exit);
         barraMain.setContentInsetsAbsolute(5, 5);
         barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -52,6 +54,9 @@ public class ListarContato extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.item_add) {
                     Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
+                    startActivity(activityCria);
+                } else if(id == R.id.item_add_group){
+                    Intent activityCria = new Intent(ListarContato.this, CriarGrupo.class);
                     startActivity(activityCria);
                 } else if (id == R.id.item_exit) {
                     url.unauth();
@@ -96,8 +101,9 @@ public class ListarContato extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-
-
+        /*
+         * Lista de Meus Contatos
+         */
         final ArrayList<Contato> listaDeContatos = new ArrayList<Contato>();
         final ListView listaView = (ListView) findViewById(R.id.listView);
         final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(ListarContato.this, R.layout.item_lista_contatos, listaDeContatos);
@@ -118,6 +124,31 @@ public class ListarContato extends AppCompatActivity {
                 startActivity(activityEdita);
             }
         });
+        /*
+         * Lista de Meus Grupos
+         */
+        final ArrayList<Grupo> listaDeGrupos = new ArrayList<Grupo>();
+        final ListView listaViewGrupo = (ListView) findViewById(R.id.listViewGrupo);
+        final ArrayAdapter<Grupo> gruposAdapter = new ArrayAdapter<Grupo>(ListarContato.this, R.layout.item_lista_contatos, listaDeGrupos);
+
+        listaViewGrupo.setAdapter(gruposAdapter);
+        atualizaListaGrupos(listaDeGrupos, "");
+
+        listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Contato contatoSelecionado = listaDeContatos.get(position);
+
+                Intent activityEdita = new Intent(ListarContato.this, EditaContato.class);
+                activityEdita.putExtra("Id", contatoSelecionado.getId());
+                activityEdita.putExtra("Nome", contatoSelecionado.getNome());
+                activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());
+                activityEdita.putExtra("Imagem", contatoSelecionado.getImagem());
+                startActivity(activityEdita);
+            }
+        });
+
+
 
         final SearchView buscaContato = (SearchView) findViewById(R.id.buscaContato);
         buscaContato.setSubmitButtonEnabled(true);
@@ -154,6 +185,44 @@ public class ListarContato extends AppCompatActivity {
                 // Atualiza a lista
                 ListView listaView = (ListView) findViewById(R.id.listView);
                 ((BaseAdapter) listaView.getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e("Erro no banco", firebaseError.getMessage());
+            }
+        });
+    }
+
+    public void atualizaListaGrupos(final ArrayList<Grupo> listaDeGrupos, String contatoNome) {
+        url.child("Usuarios").child(authData.getUid()).child("grupos").orderByKey().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listaDeGrupos.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.i("DataSnapshot1", getLocalClassName() + " > " + postSnapshot.getKey());
+                    url.child("Grupos").orderByKey().equalTo(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                Log.i("DataSnapshot2", getLocalClassName() + " > " + postSnapshot.child("nome").getValue().toString());
+                                Grupo grupo = new Grupo();
+                                grupo.setId(postSnapshot.getKey());
+                                grupo.setNome(postSnapshot.child("nome").getValue().toString());
+                                grupo.setImagem(postSnapshot.child("imagem").getValue().toString());
+                                listaDeGrupos.add(grupo);
+                            }
+                            // Atualiza a lista
+                            ListView listaView = (ListView) findViewById(R.id.listViewGrupo);
+                            ((BaseAdapter) listaView.getAdapter()).notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+                            Log.e("Erro no banco", firebaseError.getMessage());
+                        }
+                    });
+                }
             }
 
             @Override
