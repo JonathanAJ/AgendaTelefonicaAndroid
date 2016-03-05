@@ -45,7 +45,7 @@ public class ListarContato extends AppCompatActivity {
         barraMain.setSubtitleTextColor(getResources().getColor(R.color.colorTextIcon));
         barraMain.setLogo(R.mipmap.ic_launcher);
         barraMain.inflateMenu(R.menu.menu_add);
-        barraMain.inflateMenu(R.menu.menu_exit);
+        barraMain.inflateMenu(R.menu.menu_add_group);
         barraMain.inflateMenu(R.menu.menu_exit);
         barraMain.setContentInsetsAbsolute(5, 5);
         barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

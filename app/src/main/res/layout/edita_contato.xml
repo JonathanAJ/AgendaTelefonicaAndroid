@@ -64,6 +64,18 @@
             android:text="Editar contato"
             android:id="@+id/btSalva" />
 
+        <Button
+            android:id="@+id/btDeletaContato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_gravity="right"
+            android:background="@android:color/holo_red_light"
+            android:drawableLeft="@drawable/ic_action_delete"
+            android:text="Deletar"/>
+
     </LinearLayout>
 
 

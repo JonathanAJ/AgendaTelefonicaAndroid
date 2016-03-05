@@ -49,21 +49,6 @@ public class EditaContato extends AppCompatActivity {
         setSupportActionBar(barraMain);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        barraMain.inflateMenu(R.menu.menu_delete);
-        barraMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.item_delete) {
-                    editaContato(null, null, null, null);
-                    Intent activityMain = new Intent(EditaContato.this, ListarContato.class);
-                    startActivity(activityMain);
-                }
-                return true;
-            }
-        });
-
         // Views
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
         final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
@@ -95,8 +80,9 @@ public class EditaContato extends AppCompatActivity {
         final EditText nomeEdit = (EditText) findViewById(R.id.nom);
         final EditText telefoneEdit = (EditText) findViewById(R.id.tel);
         final CircleImageView imageView = (CircleImageView) findViewById(R.id.imgFoto);
+        final Button btSalva = (Button) findViewById(R.id.btSalva);
+        final Button btDeleta = (Button) findViewById(R.id.btDeletaContato);
 
-        Button btSalva = (Button) findViewById(R.id.btSalva);
         btSalva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +105,14 @@ public class EditaContato extends AppCompatActivity {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // inicia atividade com resposta
                 startActivityForResult(intent, 0);
+            }
+        });
+
+        btDeleta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editaContato(null, null, null, null);
+                finish();
             }
         });
     }
