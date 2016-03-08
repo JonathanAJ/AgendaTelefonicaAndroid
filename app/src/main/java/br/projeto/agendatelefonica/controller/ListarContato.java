@@ -53,14 +53,13 @@ public class ListarContato extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.item_add) {
-                    Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
-                    startActivity(activityCria);
+                    chamaCriaContato();
                 } else if(id == R.id.item_add_group){
-                    Intent activityCria = new Intent(ListarContato.this, CriarGrupo.class);
+                    Intent activityCria = new Intent(getApplicationContext(), CriarGrupo.class);
                     startActivity(activityCria);
                 } else if (id == R.id.item_exit) {
                     url.unauth();
-                    Intent activityLogin = new Intent(ListarContato.this, LoginContato.class);
+                    Intent activityLogin = new Intent(getApplicationContext(), LoginContato.class);
                     startActivity(activityLogin);
                 }
                 return true;
@@ -88,10 +87,9 @@ public class ListarContato extends AppCompatActivity {
             public void onClick(View v) {
                 int i = tabHost.getCurrentTab();
                 if(i == 0){
-                    Intent activityCria = new Intent(ListarContato.this, CriaContato.class);
-                    startActivity(activityCria);
+                    chamaCriaContato();
                 }else if(i == 1){
-                    Intent activityCria = new Intent(ListarContato.this, CriarGrupo.class);
+                    Intent activityCria = new Intent(getApplicationContext(), CriarGrupo.class);
                     startActivity(activityCria);
                 }
             }
@@ -106,7 +104,7 @@ public class ListarContato extends AppCompatActivity {
          */
         final ArrayList<Contato> listaDeContatos = new ArrayList<Contato>();
         final ListView listaView = (ListView) findViewById(R.id.listView);
-        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(ListarContato.this, R.layout.item_lista_contatos, listaDeContatos);
+        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(getApplicationContext(), R.layout.item_lista_contatos, listaDeContatos);
 
         listaView.setAdapter(contatosAdapter);
         atualizaListaContatos(listaDeContatos, "");
@@ -115,13 +113,7 @@ public class ListarContato extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Contato contatoSelecionado = listaDeContatos.get(position);
-
-                Intent activityEdita = new Intent(ListarContato.this, EditaContato.class);
-                activityEdita.putExtra("Id", contatoSelecionado.getId());
-                activityEdita.putExtra("Nome", contatoSelecionado.getNome());
-                activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());
-                activityEdita.putExtra("Imagem", contatoSelecionado.getImagem());
-                startActivity(activityEdita);
+                chamaEditaContato(contatoSelecionado);
             }
         });
         /*
@@ -129,21 +121,20 @@ public class ListarContato extends AppCompatActivity {
          */
         final ArrayList<Grupo> listaDeGrupos = new ArrayList<Grupo>();
         final ListView listaViewGrupo = (ListView) findViewById(R.id.listViewGrupo);
-        final ArrayAdapter<Grupo> gruposAdapter = new ArrayAdapter<Grupo>(ListarContato.this, R.layout.item_lista_contatos, listaDeGrupos);
+        final ArrayAdapter<Grupo> gruposAdapter = new ArrayAdapter<Grupo>(getApplicationContext(), R.layout.item_lista_contatos, listaDeGrupos);
 
         listaViewGrupo.setAdapter(gruposAdapter);
         atualizaListaGrupos(listaDeGrupos, "");
 
-        listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaViewGrupo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Contato contatoSelecionado = listaDeContatos.get(position);
+                Grupo grupoSelecionado = listaDeGrupos.get(position);
 
-                Intent activityEdita = new Intent(ListarContato.this, EditaContato.class);
-                activityEdita.putExtra("Id", contatoSelecionado.getId());
-                activityEdita.putExtra("Nome", contatoSelecionado.getNome());
-                activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());
-                activityEdita.putExtra("Imagem", contatoSelecionado.getImagem());
+                Intent activityEdita = new Intent(getApplicationContext(), ListarContatosGrupos.class);
+                activityEdita.putExtra("Id", grupoSelecionado.getId());
+                activityEdita.putExtra("Nome", grupoSelecionado.getNome());
+                activityEdita.putExtra("Imagem", grupoSelecionado.getImagem());
                 startActivity(activityEdita);
             }
         });
@@ -230,5 +221,23 @@ public class ListarContato extends AppCompatActivity {
                 Log.e("Erro no banco", firebaseError.getMessage());
             }
         });
+    }
+
+    public void chamaCriaContato(){
+        Intent activityCria = new Intent(getApplicationContext(), CriaContato.class);
+        activityCria.putExtra("Pertence", "usuario");
+        activityCria.putExtra("idPertence", authData.getUid());
+        startActivity(activityCria);
+    }
+
+    public void chamaEditaContato(Contato contatoSelecionado){
+        Intent activityEdita = new Intent(getApplicationContext(), EditaContato.class);
+        activityEdita.putExtra("Id", contatoSelecionado.getId());
+        activityEdita.putExtra("Nome", contatoSelecionado.getNome());
+        activityEdita.putExtra("Telefone", contatoSelecionado.getTelefone());
+        activityEdita.putExtra("Imagem", contatoSelecionado.getImagem());
+        activityEdita.putExtra("Pertence", "usuario");
+        activityEdita.putExtra("idPertence", authData.getUid());
+        startActivity(activityEdita);
     }
 }

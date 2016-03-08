@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".controller.ListarContato"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".controller.CriaContato"
             android:label="@string/cria_contato">
@@ -37,7 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.CriarGrupo"></activity>
+        <activity android:name=".controller.CriarGrupo" />
+        <activity android:name=".controller.ListarContatosGrupos"></activity>
     </application>
 
 </manifest>

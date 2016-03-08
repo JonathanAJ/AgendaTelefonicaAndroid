@@ -27,6 +27,11 @@ public class CriaContato extends AppCompatActivity {
     private Firebase url = new Firebase("https://minhagendatelefonica.firebaseio.com/");
     private AuthData authData = url.getAuth();
 
+    //Variaveis
+    private Bundle pertenceBundle;
+    private String pertence;
+    private String idPertence;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,10 @@ public class CriaContato extends AppCompatActivity {
         barraMain.setContentInsetsAbsolute(5, 5);
         setSupportActionBar(barraMain);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        pertenceBundle = getIntent().getExtras();
+        pertence = pertenceBundle.getString("Pertence");
+        idPertence = pertenceBundle.getString("idPertence");
     }
 
     @Override
@@ -64,7 +73,7 @@ public class CriaContato extends AppCompatActivity {
                 byte[] imgByte = converteBitmapParaByte(imagemBit);
                 String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
 
-                salvaContato(nome, telefone, imgBase64, authData.getUid());
+                salvaContato(nome, telefone, imgBase64, idPertence);
                 finish();
             }
         });
@@ -98,13 +107,17 @@ public class CriaContato extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public void salvaContato(String nome, String telefone, String imagem, String pertence){
+    public void salvaContato(String nome, String telefone, String imagem, String idPertence){
         Contato novoContato = new Contato();
         novoContato.setNome(nome);
         novoContato.setTelefone(telefone);
         novoContato.setImagem(imagem);
-        novoContato.setIdPertence(pertence);
-        url.child("Contatos").push().setValue(novoContato);
+        novoContato.setIdPertence(idPertence);
+        if(pertence.equals("grupo")) {
+            url.child("Contatos_Grupo").push().setValue(novoContato);
+        }else if(pertence.equals("usuario")) {
+            url.child("Contatos").push().setValue(novoContato);
+        }
     }
 
     @Override

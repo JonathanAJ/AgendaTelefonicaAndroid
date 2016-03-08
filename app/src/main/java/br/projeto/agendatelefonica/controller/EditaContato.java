@@ -33,6 +33,8 @@ public class EditaContato extends AppCompatActivity {
     private String nome;
     private String telefone;
     private String imagem;
+    private String pertence;
+    private String idPertence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class EditaContato extends AppCompatActivity {
         nome = extra.getString("Nome");
         telefone = extra.getString("Telefone");
         imagem = extra.getString("Imagem");
+        pertence = extra.getString("Pertence");
+        idPertence = extra.getString("idPertence");
 
         // Seta os valores passados
         nomeEdit.setText(nome);
@@ -93,7 +97,7 @@ public class EditaContato extends AppCompatActivity {
                 byte[] imgByte = converteBitmapParaByte(imagemBit);
                 String imgBase64 = Base64.encodeToString(imgByte, Base64.NO_WRAP);
 
-                editaContato(nome, telefone, imgBase64, authData.getUid());
+                editaContato(nome, telefone, imgBase64, idPertence);
                 finish();
             }
         });
@@ -135,13 +139,17 @@ public class EditaContato extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public void editaContato(String nome, String telefone, String imagem, String pertence){
+    public void editaContato(String nome, String telefone, String imagem, String idPertence){
         Contato novoContato = new Contato();
         novoContato.setNome(nome);
         novoContato.setTelefone(telefone);
         novoContato.setImagem(imagem);
-        novoContato.setIdPertence(pertence);
-        url.child("Contatos").child(this.id).setValue(novoContato);
+        novoContato.setIdPertence(idPertence);
+        if(pertence.equals("grupo")) {
+            url.child("Contatos_Grupo").child(this.id).setValue(novoContato);
+        }else if(pertence.equals("usuario")) {
+            url.child("Contatos").child(this.id).setValue(novoContato);
+        }
     }
 
     @Override

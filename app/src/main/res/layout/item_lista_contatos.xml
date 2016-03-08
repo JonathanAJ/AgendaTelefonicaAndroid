@@ -13,5 +13,6 @@
     android:textSize="20sp"
     android:ellipsize="end"
     android:drawableRight="@drawable/ic_action_edit"
-    android:drawableEnd="@drawable/ic_action_edit">
+    android:drawableEnd="@drawable/ic_action_edit"
+    android:textColor="@color/colorTextIcon">
 </TextView>
