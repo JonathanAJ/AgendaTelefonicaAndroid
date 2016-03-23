@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:padding="5dp"
-    android:paddingLeft="20dp"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginStart="20dp"
-    android:singleLine="true"
-    android:textSize="20sp"
-    android:ellipsize="end"
-    android:drawableRight="@drawable/ic_action_edit"
-    android:drawableEnd="@drawable/ic_action_edit"
-    android:textColor="@color/colorTextIcon">
-</TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/profile"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Nome" />
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Número" />
+    </LinearLayout>
+
+</LinearLayout>

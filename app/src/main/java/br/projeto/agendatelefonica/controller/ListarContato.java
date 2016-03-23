@@ -1,7 +1,6 @@
 package br.projeto.agendatelefonica.controller;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +21,6 @@ import java.util.*;
 import br.projeto.agendatelefonica.R;
 import br.projeto.agendatelefonica.model.Contato;
 import br.projeto.agendatelefonica.model.Grupo;
-
-import static br.projeto.agendatelefonica.controller.Util.mensagem;
 
 public class ListarContato extends AppCompatActivity {
     // URL firebase
@@ -104,10 +101,9 @@ public class ListarContato extends AppCompatActivity {
          */
         final ArrayList<Contato> listaDeContatos = new ArrayList<Contato>();
         final ListView listaView = (ListView) findViewById(R.id.listView);
-        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(getApplicationContext(), R.layout.item_lista_contatos, listaDeContatos);
 
-        listaView.setAdapter(contatosAdapter);
         atualizaListaContatos(listaDeContatos, "");
+        listaView.setAdapter(new BaseAdapterLista(this, listaDeContatos, "contato"));
 
         listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -121,21 +117,15 @@ public class ListarContato extends AppCompatActivity {
          */
         final ArrayList<Grupo> listaDeGrupos = new ArrayList<Grupo>();
         final ListView listaViewGrupo = (ListView) findViewById(R.id.listViewGrupo);
-        final ArrayAdapter<Grupo> gruposAdapter = new ArrayAdapter<Grupo>(getApplicationContext(), R.layout.item_lista_contatos, listaDeGrupos);
 
-        listaViewGrupo.setAdapter(gruposAdapter);
         atualizaListaGrupos(listaDeGrupos, "");
+        listaViewGrupo.setAdapter(new BaseAdapterLista(this, listaDeGrupos, "grupo"));
 
         listaViewGrupo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Grupo grupoSelecionado = listaDeGrupos.get(position);
-
-                Intent activityEdita = new Intent(getApplicationContext(), ListarContatosGrupos.class);
-                activityEdita.putExtra("Id", grupoSelecionado.getId());
-                activityEdita.putExtra("Nome", grupoSelecionado.getNome());
-                activityEdita.putExtra("Imagem", grupoSelecionado.getImagem());
-                startActivity(activityEdita);
+                chamaGrupo(grupoSelecionado);
             }
         });
 
@@ -239,5 +229,13 @@ public class ListarContato extends AppCompatActivity {
         activityEdita.putExtra("Pertence", "usuario");
         activityEdita.putExtra("idPertence", authData.getUid());
         startActivity(activityEdita);
+    }
+
+    public void chamaGrupo(Grupo grupoSelecionado){
+        Intent activityLista = new Intent(getApplicationContext(), ListarContatosGrupos.class);
+        activityLista.putExtra("Id", grupoSelecionado.getId());
+        activityLista.putExtra("Nome", grupoSelecionado.getNome());
+        activityLista.putExtra("Imagem", grupoSelecionado.getImagem());
+        startActivity(activityLista);
     }
 }

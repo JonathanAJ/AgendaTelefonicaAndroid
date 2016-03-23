@@ -102,10 +102,9 @@ public class ListarContatosGrupos extends AppCompatActivity {
          */
         final ArrayList<Contato> listaDeContatos = new ArrayList<Contato>();
         final ListView listaView = (ListView) findViewById(R.id.listViewGrupoContatos);
-        final ArrayAdapter<Contato> contatosAdapter = new ArrayAdapter<Contato>(getApplicationContext(), R.layout.item_lista_contatos, listaDeContatos);
-
-        listaView.setAdapter(contatosAdapter);
         atualizaListaContatosGrupos(listaDeContatos, "", id);
+
+        listaView.setAdapter(new BaseAdapterLista(this, listaDeContatos, "contato"));
 
         listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

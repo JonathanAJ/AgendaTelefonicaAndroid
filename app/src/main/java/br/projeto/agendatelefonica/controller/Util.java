@@ -1,5 +1,8 @@
 package br.projeto.agendatelefonica.controller;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -37,5 +40,12 @@ public class Util {
 
     public static void mensagem(Context context, String msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static Bitmap Base64ParaBitmap(String imagemB64){
+        //decodifica base64 para byte
+        byte[] imgByte = Base64.decode(imagemB64, Base64.DEFAULT);
+        //decodifica byte para Bitmap
+        return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
     }
 }
